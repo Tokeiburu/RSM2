@@ -444,21 +444,22 @@ namespace Rsm2.RsmFormat {
 				}
 			}
 
-			MeshMatrixSelf = Matrix4.Multiply2(MeshMatrixSelf, MeshMatrix);
+			MeshMatrixSelf = new Matrix4(MeshMatrix);
 			
 			Vertex position;
 
 			// Calculate the position of the mesh from its parent
-			if (Parent != null) {
-				position = Position_ - Parent.Position_;
-				position = Matrix4.Multiply2(new Matrix4(Parent.TransformationMatrix).Invert(), position);
-			}
-			else {
-				position = Position_;
-			}
-
 			if (PosKeyFrames.Count > 0) {
 				position = GetPosition(animationFrame);
+			}
+			else {
+				if (Parent != null) {
+					position = Position_ - Parent.Position_;
+					position = Matrix4.Multiply2(new Matrix4(Parent.TransformationMatrix).Invert(), position);
+				}
+				else {
+					position = Position_;
+				}
 			}
 
 			MeshMatrixSelf.Offset = position;
